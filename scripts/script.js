@@ -40,11 +40,17 @@ async function main() {
   const query = window.location.search.slice(1).toLowerCase();
 
   if (query) {
-    window.location.replace(
-      (await getDoc(doc(firestore, "urls", "shortcuts"))).data()["shortcuts"][query] ??
-        "https://yehwan.kim"
-    );
+    const url = (await getDoc(doc(firestore, "urls", "shortcuts"))).data()["shortcuts"][query];
 
+    if (!url) {
+      alert(
+        `${language === "ko" ? "바로 가기" : "Shortcut"} "${url}"${
+          language === "ko" ? "이(가) 존재하지 않습니다" : " does not exist"
+        }`
+      );
+    }
+
+    window.location.replace(url ?? "https://yehwan.kim");
     return;
   }
 
